@@ -1,0 +1,3 @@
+module ElDap
+  VERSION = "0.0.1"
+end
