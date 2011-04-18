@@ -25,65 +25,59 @@ module ElDap
       end
     end
 
-    describe "AbstractWorker" do
-      xit "should not allow direct instantiation" do
-        lambda { ElDap::AbstractWorker.new }.should raise_error('You cannot instantiate this class directly')
+    describe "constants" do
+      it "should define LDAP_ATTRS" do
+        Base.const_get('LDAP_ATTRS').
+          should == ['cn', 'samaccountname', 'displayname', 'name', 'telephonenumber', 'userprincipalname', 'mail']
       end
 
-      describe "constants" do
-        it "should define LDAP_ATTRS" do
-          Base.const_get('LDAP_ATTRS').
-            should == ['cn', 'samaccountname', 'displayname', 'name', 'telephonenumber', 'userprincipalname', 'mail']
-        end
+      it "should define LDAP_ATTRS" do
+        Base.const_get('LDAP_FILTERS').should == Net::LDAP::Filter.eq("objectcategory", "person")
+      end
+    end
 
-        it "should define LDAP_ATTRS" do
-          Base.const_get('LDAP_FILTERS').should == Net::LDAP::Filter.eq("objectcategory", "person")
-        end
+    describe "protected methods" do
+      it "should create an internal worker for each ip address" do
+        @instance.stub!(:server_ips).and_return(['1.1.1.1', '2.2.2.2'])
+        @instance.should_receive(:create_worker).with('username', 'password', '1.1.1.1').and_return('worker1')
+        @instance.should_receive(:create_worker).with('username', 'password', '2.2.2.2').and_return('worker2')
+        @instance.send(:workers, 'username', 'password').should == ['worker1', 'worker2']
       end
 
-      describe "protected methods" do
-        it "should create an internal worker for each ip address" do
-          @instance.stub!(:server_ips).and_return(['1.1.1.1', '2.2.2.2'])
-          @instance.should_receive(:create_worker).with('username', 'password', '1.1.1.1').and_return('worker1')
-          @instance.should_receive(:create_worker).with('username', 'password', '2.2.2.2').and_return('worker2')
-          @instance.send(:workers, 'username', 'password').should == ['worker1', 'worker2']
+      it "should create a Net::LDAP instance with the correct parameters" do
+        Net::LDAP.should_receive(:new).and_return(@ldap)
+        @ldap.should_receive(:host=).with('1.1.1.1')
+        @ldap.should_receive(:auth).with(/username/, /password/)
+        @instance.send(:create_worker, 'username', 'password', '1.1.1.1').should == @ldap
+      end
+
+      it "should transform a search result into a collection of structs" do
+        @instance.stub!(:create_struct).and_return('struct')
+        @instance.send(:create_result_collection, ['result']).should == ['struct']
+      end
+
+      it "should create a struct from a search result hash" do
+        search_result = {:cn => ['cn'], :mail => ['mail']}
+        struct = OpenStruct.new(:cn => 'cn',:mail => 'mail')
+        @instance.send(:create_struct, search_result).should == struct
+      end
+
+      describe "search_active_directory method" do
+        it "should search active directory using the correct filters and parameters" do
+          filter1 = Net::LDAP::Filter.eq("objectcategory", "person")
+          filter2 = Net::LDAP::Filter.eq("cn", "*search-string*")
+          @ldap.should_receive(:search).with(
+            :base => @instance.treebase,
+            :filter => filter1 & filter2,
+            :attributes => Base.const_get('LDAP_ATTRS'),
+            :return_result => true
+          ).and_return(['result'])
+          @instance.send(:search_active_directory, @ldap, 'search-string').should == ['result']
         end
 
-        it "should create a Net::LDAP instance with the correct parameters" do
-          Net::LDAP.should_receive(:new).and_return(@ldap)
-          @ldap.should_receive(:host=).with('1.1.1.1')
-          @ldap.should_receive(:auth).with(/username/, /password/)
-          @instance.send(:create_worker, 'username', 'password', '1.1.1.1').should == @ldap
-        end
-
-        it "should transform a search result into a collection of structs" do
-          @instance.stub!(:create_struct).and_return('struct')
-          @instance.send(:create_result_collection, ['result']).should == ['struct']
-        end
-
-        it "should create a struct from a search result hash" do
-          search_result = {:cn => ['cn'], :mail => ['mail']}
-          struct = OpenStruct.new(:cn => 'cn',:mail => 'mail')
-          @instance.send(:create_struct, search_result).should == struct
-        end
-
-        describe "search_active_directory method" do
-          it "should search active directory using the correct filters and parameters" do
-            filter1 = Net::LDAP::Filter.eq("objectcategory", "person")
-            filter2 = Net::LDAP::Filter.eq("cn", "*search-string*")
-            @ldap.should_receive(:search).with(
-              :base => @instance.treebase,
-              :filter => filter1 & filter2,
-              :attributes => Base.const_get('LDAP_ATTRS'),
-              :return_result => true
-            ).and_return(['result'])
-            @instance.send(:search_active_directory, @ldap, 'search-string').should == ['result']
-          end
-
-          it "should return a valid result when search cannot bind to the domain" do
-            @ldap.should_receive(:search).and_return(false)
-            @instance.send(:search_active_directory, @ldap, 'search-string').should == []
-          end
+        it "should return a valid result when search cannot bind to the domain" do
+          @ldap.should_receive(:search).and_return(false)
+          @instance.send(:search_active_directory, @ldap, 'search-string').should == []
         end
       end
 
