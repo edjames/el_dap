@@ -1,7 +1,6 @@
 module ElDap
   class Base
-    LDAP_ATTRS = ['cn', 'samaccountname', 'displayname', 'name', 'telephonenumber', 'userprincipalname', 'mail']
-    LDAP_FILTERS = ::Net::LDAP::Filter.eq("objectcategory", "person")
+    include Constants
     
     attr_accessor :server_ips, :username, :password, :timeout, :treebase
     
@@ -55,7 +54,7 @@ module ElDap
     end
     
     def search_active_directory(worker, search_string)
-      filters = LDAP_FILTERS & ::Net::LDAP::Filter.eq("cn", "*#{search_string}*")
+      filters = LDAP_FILTERS & ::Net::LDAP::Filter.eq(LDAP_SEARCH_FIELD, "*#{search_string}*")
       result = worker.search(:base => self.treebase,
                              :filter => filters,
                              :attributes => LDAP_ATTRS,
