@@ -25,21 +25,6 @@ module ElDap
       end
     end
 
-    describe "constants" do
-      it "should define LDAP_ATTRS" do
-        Base.const_get('LDAP_ATTRS').
-          should == ['cn', 'samaccountname', 'displayname', 'name', 'telephonenumber', 'userprincipalname', 'mail']
-      end
-
-      it "should define LDAP_FILTERS" do
-        Base.const_get('LDAP_FILTERS').should == Net::LDAP::Filter.eq("objectcategory", "person")
-      end
-      
-      it "should define LDAP_SEARCH_FIELD" do
-        Base.const_get('LDAP_SEARCH_FIELD').should == 'cn'
-      end
-    end
-
     describe "protected methods" do
       it "should create an internal worker for each ip address" do
         @instance.stub!(:server_ips).and_return(['1.1.1.1', '2.2.2.2'])
