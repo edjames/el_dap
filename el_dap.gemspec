@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Ed James"]
   s.email       = ["ed.james.email@gmail.com"]
   s.homepage    = "https://github.com/edjames/el_dap"
-  s.summary     = %q{Simple LDAP wrapper for search and authentication}
-  s.description = %q{Simple LDAP wrapper for search and authentication. This is still experimental!}
+  s.summary     = %q{A simple search and authentication tool for Active Directory using LDAP.}
+  s.description = %q{A simple search and authentication tool for Active Directory using LDAP.}
 
   s.rubyforge_project = "el_dap"
 

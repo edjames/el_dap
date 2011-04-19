@@ -1,6 +1,6 @@
 = El Dap
 
-A simple LDAP wrapper for search and authentication.
+A simple search and authentication tool for Active Directory using LDAP.
 
 == Why make this?
 
@@ -24,12 +24,35 @@ Just add this to your gem file:
 
 == Usage
 
-To follow...
+Assuming we have an Active Directory called *ad.domain.com* which can also be referred to simply as *ad*, 
+the following examples are valid:
+
+=== Authenticate a user
+
+  ElDap.configure do |l|
+    l.server_ips = ['127.0.0.1']
+    l.treebase = 'dc=ad,dc=domain,dc=com'
+  end
+
+  ElDap.validate("ad\\ed.james", 'password') # will return true if username and password are valid
+  ElDap.validate("ed.james@ad.domain.com", 'password') # will return true if username and password are valid
+
+=== Search the directory
+
+  ElDap.configure do |l|
+    l.username = 'service.account@ad.domain.com'
+    l.password = 'password'
+    l.server_ips = ['127.0.0.1']
+    l.treebase = 'dc=ad,dc=domain,dc=com'
+  end
+
+  ElDap.search('some guy') # will return an array of OpenStruct objects for each matching search result.
 
 == Contributing to El Dap
 
-My understanding of LDAP limited. This gem has only been tested on a Linux server which queries Active Directory. The gem is in production, 
-but I'm not sure how well it will perform in another kind of LDAP-enabled architecture. Any comments or assistence would be greatly appreciated.
+My understanding of LDAP limited. This gem has only been tested on a Linux server which queries Active Directory. The gem is in 
+production, but I'm not sure how well it will perform in another kind of LDAP-enabled architecture. Any comments or assistence 
+would be greatly appreciated.
 
 If you want to contribute:
 
