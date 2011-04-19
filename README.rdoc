@@ -29,9 +29,9 @@ the following examples are valid:
 
 === Authenticate a user
 
-  ElDap.configure do |l|
-    l.server_ips = ['127.0.0.1']
-    l.treebase = 'dc=ad,dc=domain,dc=com'
+  ElDap.configure do |c|
+    c.server_ips = ['127.0.0.1']
+    c.treebase = 'dc=ad,dc=domain,dc=com'
   end
 
   ElDap.validate("ad\\ed.james", 'password') # will return true if username and password are valid
@@ -39,11 +39,11 @@ the following examples are valid:
 
 === Search the directory
 
-  ElDap.configure do |l|
-    l.username = 'service.account@ad.domain.com'
-    l.password = 'password'
-    l.server_ips = ['127.0.0.1']
-    l.treebase = 'dc=ad,dc=domain,dc=com'
+  ElDap.configure do |c|
+    c.username = 'service.account@ad.domain.com'
+    c.password = 'password'
+    c.server_ips = ['127.0.0.1']
+    c.treebase = 'dc=ad,dc=domain,dc=com'
   end
 
   ElDap.search('some guy') # will return an array of OpenStruct objects for each matching search result.
