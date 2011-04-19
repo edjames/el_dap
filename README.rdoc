@@ -1,0 +1,47 @@
+= El Dap
+
+A simple LDAP wrapper for search and authentication.
+
+== Why make this?
+
+The need for this gem arose out of a business requirement for all user authentication to be done against Active Directory. 
+Our users were tired of having to remember multiple usernames and passwords, and asked if they could simply use their network 
+credentials to log into our applications. This gem passes off their username and password to an Active Directory / LDAP 
+server for authentication.
+
+Additionally, users are also able to search the Active Directory.
+
+== Installation
+
+Just add this to your gem file:
+
+  gem 'el_dap'
+
+== Features
+
+* Easily perform authentication against an Active Directory / LDAP server
+* Search an Active Directory based on wildcard search criteria
+
+== Usage
+
+To follow...
+
+== Contributing to El Dap
+
+My understanding of LDAP limited. This gem has only been tested on a Linux server which queries Active Directory. The gem is in production, 
+but I'm not sure how well it will perform in another kind of LDAP-enabled architecture. Any comments or assistence would be greatly appreciated.
+
+If you want to contribute:
+
+* Check out the latest master to make sure the feature hasn’t been implemented or the bug hasn’t been fixed yet
+* Check out the issue tracker to make sure someone already hasn’t requested it and/or contributed it
+* Fork the project
+* Start a feature/bugfix branch
+* Commit and push until you are happy with your contribution
+* Make sure to add tests for it. This is important so I don’t break it in a future version unintentionally.
+* Please try not to mess with the Rakefile, version, or history.
+
+== Copyright
+
+Copyright (c) 2011 Ed James. See LICENSE for details.
+
