@@ -24,7 +24,25 @@ Just add this to your gem file:
 
 == Usage
 
-Assuming we have an Active Directory called *ad.domain.com* which can also be referred to simply as *ad*, 
+=== Confguration
+
+To perform any ElDap operation you will need to provide at least two configuration values:
+
+* *server_ips*: an array of server IP addresses
+* *treebase*: a comma-seperated list of domain components
+
+For search operations you will also need to provide the following configuration settings:
+
+* *username*: the username of the account that will perform the search (typically this would be a service account)
+* *password*: the password of the account that will perform the search
+
+You also have the option of providing a timeout value:
+
+* *timeout*: timeout in seconds for ElDap operations (default is 15 seconds)
+
+=== Examples
+
+Assuming we have an Active Directory called <b>ad.domain.com</b> which can also be referred to simply as *ad*, 
 the following examples are valid:
 
 === Authenticate a user
