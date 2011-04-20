@@ -46,8 +46,8 @@ module ElDap
       end
     end
 
-    def create_worker(uname, pword, server_ip)
-      Worker.new(uname, pword, server_ip)
+    def create_worker(username, password, ip_address)
+      Worker.new(:username => username, :password => password, :ip_address => ip_address)
     end
     
     def search_active_directory(worker, search_string)

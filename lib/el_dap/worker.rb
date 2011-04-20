@@ -1,10 +1,10 @@
 module ElDap
-  class Worker #< ::Net::LDAP
+  class Worker < ::Net::LDAP
     
-    def initialize(username, password, ip_address)
-      self = ::Net::LDAP.new
-      self.host = ip_address
-      self.auth username, password
+    def initialize(args = {})
+      super args
+      self.host = args[:ip_address]
+      self.auth args[:username], args[:password]
       self
     end
     
