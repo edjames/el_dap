@@ -3,6 +3,7 @@ require 'spec_helper'
 module ElDap
   describe Base do
     before(:each) do
+      allow_message_expectations_on_nil
       @instance = Base.new do |i|
         i.username = 'name'
         i.password = 'password'
