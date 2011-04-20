@@ -56,21 +56,27 @@ module ElDap
       end
       
       it "should create a new worker for the first ip address" do
-        @worker = mock(Worker, :search_directory => [])
+        @worker = mock(Worker, :search_directory => [], :bind => true)
         Worker.should_receive(:new).and_return(@worker)
         @instance.search('name')
       end
       
       it "should return the result of the search" do
-        @worker = mock(Worker, :search_directory => ['result'])
+        @worker = mock(Worker, :search_directory => ['result'], :bind => true)
         Worker.stub!(:new).and_return(@worker)
         @instance.search('name').should == ['result']
       end
       
       it "should use the second ip address when the first one times out" do
+        @worker.stub(:bind).and_return(true)
         @worker.should_receive(:search_directory).ordered.and_raise(Timeout::Error)
         @worker.should_receive(:search_directory).ordered.and_return(['result'])
         @instance.search('name').should == ['result']
+      end
+      
+      it "should throw an exception if the search user credentials are invalid" do
+        @worker.should_receive(:bind).and_return(false)
+        lambda{ @instance.search('name') }.should raise_error(InvalidCredentialsError, 'The user credentials provided are invalid')
       end
     end
     

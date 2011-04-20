@@ -1,3 +1,3 @@
 module ElDap  
-  class TimeoutError < StandardError; end
+  class InvalidCredentialsError < StandardError; end
 end

@@ -32,6 +32,9 @@ module ElDap
         begin
           Timeout::timeout(self.timeout) do
             worker = Worker.new(:username => self.username, :password => self.password, :ip_address => ip_address)
+            
+            raise(InvalidCredentialsError, 'The user credentials provided are invalid') unless worker.bind
+            
             return worker.search_directory(search_string, self.treebase)
           end
         rescue Timeout::Error
