@@ -33,7 +33,7 @@ module ElDap
         begin
           Timeout::timeout(self.timeout) do
             worker = Worker.new(:username => self.username, :password => self.password, :ip_address => ip_address)
-            search_result += worker.search_directory(search_string, self.treebase)
+            return worker.search_directory(search_string, self.treebase)
           end
         rescue Timeout::Error
           next
