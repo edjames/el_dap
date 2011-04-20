@@ -1,7 +1,5 @@
 module ElDap
   class Base
-    include Constants
-    
     attr_accessor :server_ips, :username, :password, :timeout, :treebase
     
     def initialize
@@ -10,11 +8,13 @@ module ElDap
       yield(self) if block_given?
     end
     
-    def validate(uname, pword)
-      return false if uname.nil? || uname.empty? || pword.nil? || pword.empty?
-      workers(uname, pword).each do |worker|
+    def validate(username, password)
+      return false if Validator.blank?(username, password)
+      
+      @server_ips.each do |ip_address|
         begin
           Timeout::timeout(self.timeout) do
+            worker = Worker.new(:username => username, :password => password, :ip_address => ip_address)
             return worker.bind
           end
         rescue Timeout::Error
@@ -25,12 +25,15 @@ module ElDap
     end
     
     def search(search_string)
-      return nil if search_string.nil? || search_string.empty?
-      search_result = nil
-      workers(self.username, self.password).each do |worker|
+      return nil if Validator.blank?(search_string)
+      
+      search_result = []
+      
+      @server_ips.each do |ip_address|
         begin
           Timeout::timeout(self.timeout) do
-            search_result ||= search_active_directory(worker, search_string)
+            worker = Worker.new(:username => self.username, :password => self.password, :ip_address => ip_address)
+            search_result += worker.search_directory(search_string, self.treebase)
           end
         rescue Timeout::Error
           next
@@ -40,26 +43,6 @@ module ElDap
     end
     
     private
-    def workers(uname = self.username, pword = self.password)
-      self.server_ips.map do |ip|
-        create_worker uname, pword, ip
-      end
-    end
-
-    def create_worker(username, password, ip_address)
-      Worker.new(:username => username, :password => password, :ip_address => ip_address)
-    end
-    
-    def search_active_directory(worker, search_string)
-      filters = LDAP_FILTERS & ::Net::LDAP::Filter.eq(LDAP_SEARCH_FIELD, "*#{search_string}*")
-      result = worker.search(:base => self.treebase,
-                             :filter => filters,
-                             :attributes => LDAP_ATTRS,
-                             :return_result => true)
-      # search will return false if unable to bind
-      # e.g. service account credentials have expired
-      result || []
-    end
 
     def create_result_collection(collection = [])
       collection ||= []
