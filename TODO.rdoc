@@ -1,6 +1,5 @@
 == TODO
 
-* improve the use of multiple servers and possibly provide an option to use either the first successful response or combine all responses
 * validate the configuration settings prior to executing ElDap operation
 * provide more meaningful exception messages
 * implement bang methods

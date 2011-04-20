@@ -1,7 +1,5 @@
 module ElDap
   class Base
-    include Constants
-    
     attr_accessor :server_ips, :username, :password, :timeout, :treebase
     
     def initialize
@@ -10,69 +8,39 @@ module ElDap
       yield(self) if block_given?
     end
     
-    def validate(uname, pword)
-      return false if uname.nil? || uname.empty? || pword.nil? || pword.empty?
-      workers(uname, pword).each do |worker|
+    def validate(username, password)
+      return false if Validator.blank?(username, password)
+      
+      @server_ips.each do |ip_address|
         begin
           Timeout::timeout(self.timeout) do
+            worker = Worker.new(:username => username, :password => password, :ip_address => ip_address)
             return worker.bind
           end
         rescue Timeout::Error
           next
         end
       end
-      false
     end
     
     def search(search_string)
-      return nil if search_string.nil? || search_string.empty?
-      search_result = nil
-      workers(self.username, self.password).each do |worker|
+      return nil if Validator.blank?(search_string)
+      
+      search_result = []
+      
+      @server_ips.each do |ip_address|
         begin
           Timeout::timeout(self.timeout) do
-            search_result ||= search_active_directory(worker, search_string)
+            worker = Worker.new(:username => self.username, :password => self.password, :ip_address => ip_address)
+            
+            raise(InvalidCredentialsError, 'The user credentials provided are invalid') unless worker.bind
+            
+            return worker.search_directory(search_string, self.treebase)
           end
         rescue Timeout::Error
           next
         end
       end
-      create_result_collection search_result
-    end
-    
-    private
-    def workers(uname = self.username, pword = self.password)
-      self.server_ips.map do |ip|
-        create_worker uname, pword, ip
-      end
-    end
-
-    def create_worker(uname, pword, server_ip)
-      obj = ::Net::LDAP.new
-      obj.host = server_ip
-      obj.auth uname, pword
-      obj
-    end
-    
-    def search_active_directory(worker, search_string)
-      filters = LDAP_FILTERS & ::Net::LDAP::Filter.eq(LDAP_SEARCH_FIELD, "*#{search_string}*")
-      result = worker.search(:base => self.treebase,
-                             :filter => filters,
-                             :attributes => LDAP_ATTRS,
-                             :return_result => true)
-      # search will return false if unable to bind
-      # e.g. service account credentials have expired
-      result || []
-    end
-
-    def create_result_collection(collection = [])
-      collection ||= []
-      collection.map { |entry| create_struct entry }
-    end
-
-    def create_struct(hash = {})
-      key_values = {}
-      hash.each{|k, v| key_values[k] = v[0]}
-      OpenStruct.new(key_values)
     end
     
   end
