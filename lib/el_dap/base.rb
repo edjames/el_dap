@@ -39,20 +39,7 @@ module ElDap
           next
         end
       end
-      create_result_collection search_result
-    end
-    
-    private
-
-    def create_result_collection(collection = [])
-      collection ||= []
-      collection.map { |entry| create_struct entry }
-    end
-
-    def create_struct(hash = {})
-      key_values = {}
-      hash.each{|k, v| key_values[k] = v[0]}
-      OpenStruct.new(key_values)
+      search_result
     end
     
   end
