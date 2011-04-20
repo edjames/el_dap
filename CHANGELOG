@@ -1,3 +1,9 @@
+0.0.3
+=====
+
+* When using multiple servers, return the first valid result. Only use additional servers on a timeout exception.
+* An InvalidCredentialsError exception will be thrown on a search if the user credentials are invalid i.e. cannot bind
+
 0.0.2
 =====
 
