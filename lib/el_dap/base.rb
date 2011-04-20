@@ -47,10 +47,7 @@ module ElDap
     end
 
     def create_worker(uname, pword, server_ip)
-      obj = ::Net::LDAP.new
-      obj.host = server_ip
-      obj.auth uname, pword
-      obj
+      Worker.new(uname, pword, server_ip)
     end
     
     def search_active_directory(worker, search_string)
