@@ -21,7 +21,6 @@ module ElDap
           next
         end
       end
-      false
     end
     
     def search(search_string)
@@ -39,7 +38,6 @@ module ElDap
           next
         end
       end
-      search_result
     end
     
   end
