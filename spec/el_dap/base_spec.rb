@@ -75,6 +75,12 @@ module ElDap
         @instance.search('name').should == ['result']
       end
       
+      it "should return false when all servers timeout" do
+        @worker.stub(:bind).and_return(true)
+        @worker.stub(:search_directory).and_raise(Timeout::Error)
+        @instance.search('name').should be_false
+      end
+      
       it "should throw an exception if the search user credentials are invalid" do
         @worker.should_receive(:bind).and_return(false)
         lambda{ @instance.search('name') }.should raise_error(InvalidCredentialsError, 'The user credentials provided are invalid')
