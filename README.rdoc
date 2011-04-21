@@ -16,6 +16,15 @@ Additionally, users are also able to search the Active Directory.
 Just add this to your gem file:
 
   gem 'el_dap'
+  
+=== Ruby Version Dependencies
+
+ElDap will work out of the box with Ruby 1.9. 
+
+If you are using Ruby 1.8, you will need to manually install the *SystemTimer* gem so that timeout exceptions are handled 
+correctly. You will not be able to install ElDap on Ruby 1.8 unless you have this gem.
+
+  gem install SystemTimer
 
 == Features
 
