@@ -13,7 +13,7 @@ module ElDap
 
       @server_ips.each do |ip_address|
         begin
-          Timeout::timeout(self.timeout) do
+          TimeCop.timer.timeout(self.timeout) do
             worker = Worker.new(:username => username, :password => password, :ip_address => ip_address)
             return worker.bind
           end
@@ -28,7 +28,7 @@ module ElDap
 
       @server_ips.each do |ip_address|
         begin
-          Timeout::timeout(self.timeout) do
+          TimeCop.timer.timeout(self.timeout) do
             worker = Worker.new(:username => self.username, :password => self.password, :ip_address => ip_address)
             raise(InvalidCredentialsError, 'The user credentials provided are invalid') unless worker.bind
             return worker.search_directory(search_string, self.treebase)

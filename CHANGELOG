@@ -1,3 +1,8 @@
+0.0.4
+=====
+
+* Added support for Ruby 1.8, making use of the SystemTimer gem to correctly handle timeouts.
+
 0.0.3
 =====
 
