@@ -1,4 +1,8 @@
-# -*- encoding: utf-8 -*-
+#!/usr/bin/env gem build
+# encoding: utf-8
+
+require 'base64'
+
 $:.push File.expand_path("../lib", __FILE__)
 require "el_dap/version"
 
@@ -7,7 +11,7 @@ Gem::Specification.new do |s|
   s.version     = ElDap::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Ed James"]
-  s.email       = ["ed.james.email@gmail.com"]
+  s.email       = Base64.decode64("ZWQuamFtZXMuZW1haWxAZ21haWwuY29t\n")
   s.homepage    = "https://github.com/edjames/el_dap"
   s.summary     = %q{A simple search and authentication tool for Active Directory using LDAP.}
   s.description = %q{A simple search and authentication tool for Active Directory using LDAP.}
@@ -20,4 +24,15 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.add_dependency("net-ldap", "~> 0.2.2")
+  s.add_development_dependency "bundler"
+  
+  # If Ruby version is 1.8 then check for SystemTimer gem
+  if RUBY_VERSION < "1.9"
+    begin
+      require 'system_timer'
+    rescue LoadError => ex
+      warn "WARNING: To use ElDap in Ruby 1.8 you must have the SystemTimer gem installed. Please run: gem install SystemTimer"
+      raise ex.message
+    end
+  end
 end

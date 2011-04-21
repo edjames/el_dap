@@ -1,6 +1,7 @@
 require 'net/ldap'
 require 'timeout'
 
+$: << File.dirname(__FILE__)
 require 'el_dap/api_methods'
 require 'el_dap/constants'
 require 'el_dap/exceptions'
