@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.email       = Base64.decode64("ZWQuamFtZXMuZW1haWxAZ21haWwuY29t\n")
   s.homepage    = "https://github.com/edjames/el_dap"
   s.summary     = "Simple search and authentication tool for Active Directory"
-  s.description = "#{s.summary}. This included support for both Ruby 1.9 and ruby 1.8 (using the SystemTimer gem)."
+  s.description = "#{s.summary}. This included support for both Ruby 1.9 and Ruby 1.8 (using the SystemTimer gem)."
 
   s.rubyforge_project = "el_dap"
 
