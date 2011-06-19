@@ -34,12 +34,12 @@ correctly. You will not be able to install ElDap on Ruby 1.8 unless you have thi
 
 == Usage
 
-=== Confguration
+=== Configuration
 
 To perform any ElDap operation you will need to provide at least two configuration values:
 
 * *server_ips*: an array of server IP addresses
-* *treebase*: a comma-seperated list of domain components
+* *treebase*: a comma-separated list of domain components
 
 For search operations you will also need to provide the following configuration settings:
 
@@ -78,8 +78,8 @@ the following examples are valid:
 
 == Contributing to El Dap
 
-My understanding of LDAP limited. This gem has only been tested on a Linux server which queries Active Directory. The gem is in 
-production, but I'm not sure how well it will perform in another kind of LDAP-enabled architecture. Any comments or assistence 
+My understanding of LDAP is limited. This gem has only been tested on a Linux server which queries Active Directory. The gem is in 
+production, but I'm not sure how well it will perform in another kind of LDAP-enabled architecture. Any comments or assistance 
 would be greatly appreciated.
 
 If you want to contribute:
@@ -95,4 +95,3 @@ If you want to contribute:
 == Copyright
 
 Copyright (c) 2011 Ed James. See LICENSE for details.
-
