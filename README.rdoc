@@ -78,7 +78,7 @@ the following examples are valid:
 
 == Contributing to El Dap
 
-My understanding of LDAP limited. This gem has only been tested on a Linux server which queries Active Directory. The gem is in 
+My understanding of LDAP is limited. This gem has only been tested on a Linux server which queries Active Directory. The gem is in 
 production, but I'm not sure how well it will perform in another kind of LDAP-enabled architecture. Any comments or assistance 
 would be greatly appreciated.
 
